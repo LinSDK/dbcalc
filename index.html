@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>dB Calculator</title>
+  <meta name="description" content="Estimated headphone loudness at every volume step of a measured DAC.">
+  <meta name="theme-color" content="#15171E">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon-256.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <img src="assets/logo.svg" alt="" width="32" height="32">
+    <h1>dB Calculator</h1>
+    <button type="button" class="icon-btn" id="info-btn" aria-label="How it works" aria-haspopup="dialog">i</button>
+  </header>
+
+  <main>
+    <section class="card setup" aria-label="Setup">
+      <label class="field">
+        <span>DAC</span>
+        <select id="dac"></select>
+      </label>
+
+      <div class="pair">
+        <fieldset class="field">
+          <legend>Output</legend>
+          <div class="segments" id="iface"></div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Gain</legend>
+          <div class="segments" id="mode"></div>
+        </fieldset>
+      </div>
+
+      <label class="field">
+        <span>Headphones</span>
+        <select id="headphone"></select>
+      </label>
+
+      <div id="custom" class="pair custom" hidden>
+        <label class="field">
+          <span>Sensitivity</span>
+          <div class="inline">
+            <input id="custom-sens" type="number" inputmode="decimal" min="50" max="160" step="0.5" value="110">
+            <select id="custom-unit" aria-label="Unit">
+              <option value="dB/mW">dB/mW</option>
+              <option value="dB/V">dB/V</option>
+            </select>
+          </div>
+        </label>
+        <label class="field">
+          <span>Impedance Ω</span>
+          <input id="custom-imp" type="number" inputmode="decimal" min="1" max="1000" step="0.5" value="32">
+        </label>
+      </div>
+      <p class="chips" id="hp-chips"></p>
+      <p class="hp-note" id="hp-note" hidden></p>
+
+      <fieldset class="field weighting">
+        <legend>Weighting</legend>
+        <div class="segments" id="weighting"></div>
+      </fieldset>
+    </section>
+
+    <section class="card hero" aria-label="Estimated loudness">
+      <div class="meter" id="meter" aria-live="polite">
+        <div class="reading"><span id="range">–</span><small id="unit">dB(A)</small></div>
+        <div class="zone" id="zone"></div>
+      </div>
+
+      <div class="vol">
+        <button type="button" class="step" id="vol-down" aria-label="Volume down">−</button>
+        <div class="vol-track">
+          <input id="volume" type="range" min="0" max="60" step="1" value="30" aria-label="Volume step">
+        </div>
+        <button type="button" class="step" id="vol-up" aria-label="Volume up">+</button>
+        <output id="vol-value" for="volume" aria-label="Volume step">0</output>
+      </div>
+
+      <dl class="stats">
+        <div><dt>Peak</dt><dd id="peak">–</dd></div>
+        <div><dt>Per day</dt><dd id="limit">–</dd></div>
+        <div><dt>Safe to</dt><dd id="safe-step">–</dd></div>
+      </dl>
+    </section>
+
+    <section class="card" aria-label="All volume steps">
+      <div class="chart" id="chart" role="img"></div>
+      <details>
+        <summary>All steps</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Step</th><th scope="col">Volts</th><th scope="col">dB</th><th scope="col">Peak</th></tr></thead>
+            <tbody id="table"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <dialog id="info" aria-label="How it works">
+    <dl class="info">
+      <div><dt>dB</dt><dd>Music, −20…−8 dBFS</dd></div>
+      <div><dt>Peak</dt><dd>0 dBFS sine</dd></div>
+      <div><dt>Per day</dt><dd>NIOSH, 85 dB / 3 dB</dd></div>
+      <div><dt>A / C</dt><dd>Pink-noise offset: −2.9 / −1.1 dB</dd></div>
+      <div><dt>Danger</dt><dd>≥ 100 dB</dd></div>
+      <div><dt>Safe to</dt><dd>Last step &lt; 100 dB</dd></div>
+    </dl>
+    <p class="fine">Source at 100%.</p>
+    <form method="dialog"><button class="close">OK</button></form>
+  </dialog>
+
+  <script src="data/dacs.js"></script>
+  <script src="data/headphones.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
