@@ -32,6 +32,9 @@
 }
 
 * { box-sizing: border-box; }
+/* No double-tap-to-zoom on iOS (rapid taps on −/+ would zoom); pinch zoom still works. */
+html, button, input, select, label, summary { touch-action: manipulation; }
+button { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; }
 
 body {
